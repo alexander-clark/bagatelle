@@ -1,19 +1,6 @@
 # Bagatelle
 
-Bagatelle is a very simple ORM following the data mapper pattern. It makes it easy to query a relational database and map the results into an object graph of POROs. Here's an example:
-
-```ruby
-class UserMapper < Bagatelle::Mapper
-  children :pages, lists: :items
-  def find(id)
-    recursive_map('users', 'id', [id], associations)
-  end
-end
-
-um = UserMapper.new(storage)
-user = um.find(1)
-#=> [#<User id=1, name="Sam", pages=[#<Page id=1, user_id=1, name="Home", body="This is my home page">], lists=[#<List id=1, user_id=1, name="To Do", items=[#<Item id=1, list_id=1, name="Mow Lawn">]>]>]
-```
+Bagatelle is a very simple ORM following the data mapper pattern. It makes it easy to query a relational database and map the results into an object graph of POROs.
 
 No ActiveRecord necessary!
 
@@ -35,7 +22,24 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+1. Define a mapper for your parent object
+1. Instantiate a storage object
+1. Instantiate your mapper
+1. Run your query!
+
+```ruby
+class UserMapper < Bagatelle::Mapper
+  children :pages, lists: :items
+  def find(id)
+    recursive_map('users', 'id', [id], associations)
+  end
+end
+
+storage = Bagatelle::MysqlStorage.new(:host => "localhost", :username => "user", :database => "yourdb")
+um = UserMapper.new(storage)
+user = um.find(1)
+#=> [#<User id=1, name="Sam", pages=[#<Page id=1, user_id=1, name="Home", body="This is my home page">], lists=[#<List id=1, user_id=1, name="To Do", items=[#<Item id=1, list_id=1, name="Mow Lawn">]>]>]
+```
 
 ## Development
 
@@ -45,7 +49,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/bagatelle/fork )
+1. Fork it ( https://github.com/alexander-clark/bagatelle/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
